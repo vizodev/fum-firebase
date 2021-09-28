@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+
+    function isUser(uid) {
+      return exists(/databases/{database}/documents/fum/entities/users/$(uid));
+    }
+
+    function getUser(uid) {
+      return get(/databases/{database}/documents/fum/entities/users/$(uid));
+    }
+
+    function hasRole(uid, role) {
+      return getUser(uid).data.role == role;
+    }
+
+    function hasPermission(uid, permission) {
+      return permission in getUser(uid).data.permissions;
+    }
+
+    function isInOrganization(uid, org) {
+      return org in getUser(uid).data.organizationsIds;
+    }
+
+    function isInTeam(uid, team) {
+      return team in getUser(uid).data.teamsIds;
+    }
+
+    match /fum/entities/users/{uid} {
+      allow read: if uid == request.auth.uid;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

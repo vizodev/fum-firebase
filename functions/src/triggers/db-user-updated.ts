@@ -1,0 +1,25 @@
+import * as functions from "firebase-functions";
+import { FUM_USERS_COLLECTION } from "../constants";
+import { AuthUser } from "../interfaces/auth-user";
+import { User } from "../interfaces/user";
+import * as admin from "firebase-admin";
+
+export default functions.firestore
+  .document(`${FUM_USERS_COLLECTION}/{userId}`)
+  .onUpdate((change, ctx) => {
+    const data = change.after.data() as User;
+
+    const authUser: AuthUser = {
+      email: data.email,
+      id: change.after.id,
+      permissions: data.permissions,
+      role: data.role,
+      organizationsIds: data.organizationsIds,
+      teamsIds: data.teamsIds,
+    };
+
+    return admin
+      .auth()
+      .updateUser(authUser.id, { displayName: data.name })
+      .then(() => admin.auth().setCustomUserClaims(data.id, authUser));
+  });
