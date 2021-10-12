@@ -6,16 +6,16 @@ import * as admin from "firebase-admin";
 
 export default functions.firestore
   .document(`${FUM_USERS_COLLECTION}/{userId}`)
-  .onUpdate((change, ctx) => {
+  .onUpdate((change: any, ctx: any) => {
     const data = change.after.data() as User;
 
     const authUser: AuthUser = {
       email: data.email,
       id: change.after.id,
-      permissions: data.permissions,
-      role: data.role,
-      organizationsIds: data.organizationsIds,
-      teamsIds: data.teamsIds,
+      permissions: data.permissions ?? [],
+      roles: data.roles ?? [],
+      organizationsIds: data.organizationsIds ?? [],
+      teamsIds: data.teamsIds ?? [],
     };
 
     return admin

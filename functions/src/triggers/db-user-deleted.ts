@@ -4,9 +4,9 @@ import * as admin from "firebase-admin";
 
 export default functions.firestore
   .document(`${FUM_USERS_COLLECTION}/{userId}`)
-  .onDelete((change, ctx) =>
+  .onDelete((change: any, context: any) =>
     admin
       .auth()
-      .deleteUser(ctx.params.userId)
+      .deleteUser(context.params.userId)
       .catch(() => {})
   );

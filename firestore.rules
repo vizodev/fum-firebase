@@ -12,7 +12,7 @@ service cloud.firestore {
     }
 
     function hasRole(uid, role) {
-      return getUser(uid).data.role == role;
+      return role in getUser(uid).data.roles;
     }
 
     function hasPermission(uid, permission) {
