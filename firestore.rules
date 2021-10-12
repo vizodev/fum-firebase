@@ -106,6 +106,13 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /fum/config {
+      allow write: if hasPermission(request.auth.uid, 'config.write');
+      allow read: if hasPermission(request.auth.uid, 'config.read');
+      allow update: if hasPermission(request.auth.uid, 'config.update');
+      allow delete: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
