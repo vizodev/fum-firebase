@@ -16,7 +16,7 @@ service cloud.firestore {
     }
 
     function hasPermission(uid, permission) {
-      return permission in getUser(uid).data.permissions;
+      return hasRole(uid, 'superadmin') || permission in getUser(uid).data.permissions;
     }
 
     function isInOrganization(uid, org) {
@@ -27,8 +27,83 @@ service cloud.firestore {
       return team in getUser(uid).data.teamsIds;
     }
 
+    function checkUpdateUserForbiddenFields() {
+      return request.resource.data.keys().hasAny(['organizationsIds', 'teamsIds', 'roles', 'permissions']);
+    }
+    
+    function canReadUser(uid) {
+      return request.auth.uid == uid || hasPermission(request.auth.uid, 'users.read');
+    }
+
+    function canUpdateUser(uid) {
+      return checkUpdateUserForbiddenFields() && (uid == request.auth.uid ? true : hasPermission(request.auth.uid, 'users.update'));
+    }
+
+    function canDeleteUser(uid) {
+      return request.auth.uid == uid || hasPermission(request.auth.uid, 'users.delete');
+    }
+
+    function canReadOrganization(orgId) {
+      return isUser(request.auth.uid);
+    }
+
+    function canUpdateOrganization(orgId) {
+      return hasPermission(request.auth.uid, 'organizations.update') || hasPermission(request.auth.uid, 'organization.' + orgId + '.update');
+    }
+
+    function canDeleteOrganization(orgId) {
+      return hasPermission(request.auth.uid, 'organizations.delete');
+    }
+
+    function canReadTeam(teamId) {
+      return isUser(request.auth.uid);
+    }
+
+    function canUpdateTeam(teamId) {
+      return hasPermission(request.auth.uid, 'teams.update') || hasPermission(request.auth.uid, 'team.' + teamId + '.update');
+    }
+
+    function canDeleteTeam(teamId) {
+      return hasPermission(request.auth.uid, 'teams.delete');
+    }
+
     match /fum/entities/users/{uid} {
-      allow read: if uid == request.auth.uid;
+      allow read: if canReadUser(uid);
+      allow update: if canUpdateUser(uid);
+      allow delete: if canDeleteUser(uid);
+    }
+
+    match /fum/entities/organizations/{orgId} {
+      allow read: if canReadOrganization(orgId);
+      allow update: if canUpdateOrganization(orgId);
+      allow delete: if canDeleteOrganization(orgId);
+    }
+
+    match /fum/entities/teams/{teamId} {
+      allow read: if canReadTeam(teamId);
+      allow update: if canUpdateTeam(teamId);
+      allow delete: if canDeleteTeam(teamId);
+    }
+
+    match /fum/schemas {
+      allow write: if hasPermission(request.auth.uid, 'schemas.write');
+      allow read: if hasPermission(request.auth.uid, 'schemas.read');
+      allow update: if hasPermission(request.auth.uid, 'schemas.update');
+      allow delete: if false;
+    }
+    
+    match /fum/roles {
+      allow write: if hasPermission(request.auth.uid, 'roles.write');
+      allow read: if hasPermission(request.auth.uid, 'roles.read');
+      allow update: if hasPermission(request.auth.uid, 'roles.update');
+      allow delete: if false;
+    }
+
+    match /fum/permissions {
+      allow write: if hasPermission(request.auth.uid, 'permissions.write');
+      allow read: if hasPermission(request.auth.uid, 'permissions.read');
+      allow update: if hasPermission(request.auth.uid, 'permissions.update');
+      allow delete: if false;
     }
 
     match /{document=**} {
