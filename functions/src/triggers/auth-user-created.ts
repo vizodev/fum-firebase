@@ -9,7 +9,7 @@ import {
 } from "../constants";
 import { ProjectConfig } from "../interfaces/project-config";
 
-export default functions
+export const authUserCreated = functions
   .region(...REGIONS)
   .runWith({ memory: MEMORY })
   .auth.user()

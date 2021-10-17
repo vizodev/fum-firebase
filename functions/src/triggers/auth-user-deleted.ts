@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { FUM_USERS_COLLECTION, MEMORY, REGIONS } from "../constants";
 
-export default functions
+export const authUserDeleted = functions
   .region(...REGIONS)
   .runWith({ memory: MEMORY })
   .auth.user()

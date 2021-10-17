@@ -1,0 +1,31 @@
+{
+  "roles": ["superadmin"],
+  "permissions": [
+    "user.read",
+    "user.update",
+    "user.delete",
+    "organizations.read",
+    "organizations.update",
+    "organizations.delete",
+    "teams.read",
+    "teams.update",
+    "teams.delete",
+    "schemas.write",
+    "schemas.read",
+    "schemas.update",
+    "roles.write",
+    "roles.read",
+    "roles.update",
+    "permissions.write",
+    "permissions.read",
+    "permissions.update",
+    "config.write",
+    "config.read",
+    "config.update"
+  ],
+  "config": {
+    "auth": {
+      "registerEnabled": true
+    }
+  }
+}

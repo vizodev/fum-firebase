@@ -4,7 +4,7 @@ import { AuthUser } from "../interfaces/auth-user";
 import { User } from "../interfaces/user";
 import * as admin from "firebase-admin";
 
-export default functions
+export const authUserUpdated = functions
   .region(...REGIONS)
   .runWith({ memory: MEMORY })
   .firestore.document(`${FUM_USERS_COLLECTION}/{userId}`)
