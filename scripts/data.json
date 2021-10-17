@@ -27,5 +27,91 @@
     "auth": {
       "registerEnabled": true
     }
+  },
+  "schemas": {
+    "user": [
+      {
+        "key": "id",
+        "type": { "id": "string" },
+        "required": true,
+        "reserved": true
+      },
+      {
+        "key": "name",
+        "type": { "id": "string" },
+        "required": true,
+        "reserved": true
+      },
+      {
+        "key": "email",
+        "type": { "id": "string" },
+        "required": true,
+        "reserved": true
+      },
+      {
+        "key": "phone",
+        "type": { "id": "string" },
+        "required": false,
+        "reserved": false
+      },
+      {
+        "key": "avatar",
+        "type": { "id": "string" },
+        "required": false,
+        "reserved": false
+      },
+      {
+        "key": "organizations",
+        "type": { "id": "string", "values": { "id": "string" } },
+        "required": true,
+        "reserved": true
+      },
+      {
+        "key": "teams",
+        "type": { "id": "string", "values": { "id": "string" } },
+        "required": true,
+        "reserved": true
+      },
+      {
+        "key": "roles",
+        "type": { "id": "string", "values": { "id": "string" } },
+        "required": true,
+        "reserved": true
+      },
+      {
+        "key": "permissions",
+        "type": { "id": "string", "values": { "id": "string" } },
+        "required": true,
+        "reserved": true
+      }
+    ],
+    "organization": [
+      {
+        "key": "id",
+        "type": { "id": "string" },
+        "required": true,
+        "reserved": true
+      },
+      {
+        "key": "name",
+        "type": { "id": "string" },
+        "required": true,
+        "reserved": true
+      }
+    ],
+    "team": [
+      {
+        "key": "id",
+        "type": { "id": "string" },
+        "required": true,
+        "reserved": true
+      },
+      {
+        "key": "name",
+        "type": { "id": "string" },
+        "required": true,
+        "reserved": true
+      }
+    ]
   }
 }
